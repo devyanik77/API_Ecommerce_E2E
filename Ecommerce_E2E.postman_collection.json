@@ -1,0 +1,494 @@
+{
+	"info": {
+		"_postman_id": "3c1c8b40-70b9-4139-953d-b5a733695caf",
+		"name": "Ecommerce_E2E",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24956251",
+		"_collection_link": "https://devyanikondegmailcom.postman.co/workspace/AutomationTestingEdge~72db8b0e-a9c4-46c8-b720-3b96433c81f8/collection/24956251-3c1c8b40-70b9-4139-953d-b5a733695caf?action=share&source=collection_link&creator=24956251"
+	},
+	"item": [
+		{
+			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData= pm.response.json();\r",
+							"\r",
+							"pm.collectionVariables.set(\"token\", jsonData.token);\r",
+							"pm.collectionVariables.set(\"userId\", jsonData.userId);\r",
+							"\r",
+							"pm.expect(jsonData.message).to.eql(\"Login Successfully\");\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"userEmail\": \"devyani.k77@gmail.com\", \"userPassword\": \"Abcd@1234\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/ecom/auth/login",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"ecom",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateProduct",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function(){\r",
+							"    pm.response.to.have.status(201);\r",
+							"})\r",
+							"\r",
+							"const jsonData= pm.response.json();\r",
+							"console.log(jsonData);\r",
+							"\r",
+							"if (jsonData.productId) {\r",
+							"    pm.collectionVariables.set(\"productId\", jsonData.productId);\r",
+							"    console.log(\"Saved productId:\", jsonData.productId);\r",
+							"} else {\r",
+							"    console.log(\"productId NOT FOUND in response\");\r",
+							"}\r",
+							"\r",
+							"pm.expect(jsonData.message).to.eql(\"Product Added Successfully\");\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "productName",
+							"value": "{{productName}}",
+							"type": "text"
+						},
+						{
+							"key": "productAddedBy",
+							"value": "{{userId}}",
+							"type": "text"
+						},
+						{
+							"key": "productSubCategory",
+							"value": "fashion",
+							"type": "text"
+						},
+						{
+							"key": "productPrice",
+							"value": "1200",
+							"type": "text"
+						},
+						{
+							"key": "productDescription",
+							"value": "Addidas Originals",
+							"type": "text"
+						},
+						{
+							"key": "productFor",
+							"value": "male",
+							"type": "text"
+						},
+						{
+							"key": "productImage",
+							"type": "file",
+							"src": "/C:/Users/tgt661/Documents/postman_execution/API_Ecommerce_E2E/data/productImage_1.jpeg"
+						},
+						{
+							"key": "productCategory",
+							"value": "fashion",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/api/ecom/product/add-product",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"ecom",
+						"product",
+						"add-product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateOrder",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData= pm.response.json();\r",
+							"console.log(jsonData);\r",
+							"\r",
+							"if (jsonData.orders && jsonData.orders.length > 0) {\r",
+							"    let orderId = jsonData.orders[0];\r",
+							"    pm.collectionVariables.set(\"orderId\", orderId);\r",
+							"    console.log(\"Order ID saved:\", orderId);\r",
+							"} else {\r",
+							"    console.log(\"orders NOT FOUND in response\");\r",
+							"}\r",
+							"\r",
+							"if (jsonData.productOrderId && jsonData.productOrderId.length > 0) {\r",
+							"    let prodOrderId = jsonData.productOrderId[0];\r",
+							"    pm.collectionVariables.set(\"productOrderId\", prodOrderId);\r",
+							"    console.log(\"Product Order ID saved:\", prodOrderId);\r",
+							"} else {\r",
+							"    console.log(\"productOrderId NOT FOUND in response\");\r",
+							"}\r",
+							"\r",
+							"pm.test(\"Message is correct\", function () {\r",
+							"    pm.expect(jsonData.message).to.eql(\"Order Placed Successfully\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"orders\":[{\"country\":\"{{countryname}}\",\"productOrderedId\":\"{{productId}}\"}]}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/ecom/order/create-order",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"ecom",
+						"order",
+						"create-order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ViewOrderDetails",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"})\r",
+							"\r",
+							"const jsonData= pm.response.json();\r",
+							"console.log(jsonData);\r",
+							"\r",
+							"\r",
+							"pm.test(\"Correct success message\", function () {\r",
+							"    pm.expect(jsonData.message).to.eql(\"Orders fetched for customer Successfully\");\r",
+							"});\r",
+							"   \r",
+							"pm.test(\"Data object exists\", function () {\r",
+							"    pm.expect(jsonData.data).to.be.an(\"object\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Required fields exist\", function () {\r",
+							"    const fields = [\r",
+							"        \"_id\",\r",
+							"        \"orderById\",\r",
+							"        \"orderBy\",\r",
+							"        \"productOrderedId\",\r",
+							"        \"productName\",\r",
+							"        \"country\",\r",
+							"        \"productDescription\",\r",
+							"        \"productImage\",\r",
+							"        \"orderPrice\"\r",
+							"    ];\r",
+							"    \r",
+							"    fields.forEach(f => {\r",
+							"        pm.expect(jsonData.data).to.have.property(f);\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Field types are correct\", function () {\r",
+							"    pm.expect(jsonData.data._id).to.be.a(\"string\");\r",
+							"    pm.expect(jsonData.data.orderById).to.be.a(\"string\");\r",
+							"    pm.expect(jsonData.data.orderBy).to.be.a(\"string\");\r",
+							"    pm.expect(jsonData.data.productOrderedId).to.be.a(\"string\");\r",
+							"    pm.expect(jsonData.data.productName).to.be.a(\"string\");\r",
+							"    pm.expect(jsonData.data.country).to.be.a(\"string\");\r",
+							"    pm.expect(jsonData.data.productDescription).to.be.a(\"string\");\r",
+							"    pm.expect(jsonData.data.productImage).to.be.a(\"string\");\r",
+							"    pm.expect(jsonData.data.orderPrice).to.be.a(\"string\"); // or number if API changes\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Product name is not empty\", function () {\r",
+							"    pm.expect(jsonData.data.productName).to.not.be.empty;\r",
+							"});\r",
+							"pm.expect(jsonData.data.productName).to.eql(pm.collectionVariables.get(\"productName\"))\r",
+							"\r",
+							"pm.test(\"Order belongs to correct user\", function () {\r",
+							"    pm.expect(jsonData.data.orderBy).to.eql(\"devyani.k77@gmail.com\"); // or {{email}}\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Product image is a valid URL\", function () {\r",
+							"    pm.expect(jsonData.data.productImage).to.include(\"http\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/ecom/order/get-orders-details?id={{orderId}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"ecom",
+						"order",
+						"get-orders-details"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "{{orderId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteProduct",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData= pm.response.json();\r",
+							"console.log(jsonData);\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.expect(jsonData.message).to.eql(\"Product Deleted Successfully\");\r",
+							"\r",
+							"pm.test(\"Validate delete response\", function () {\r",
+							"    pm.expect(jsonData.message).to.be.oneOf([\r",
+							"        \"Product Deleted Successfully\",\r",
+							"        \"Product not found\"\r",
+							"    ]);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/ecom/product/delete-product/{{productId}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"ecom",
+						"product",
+						"delete-product",
+						"{{productId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteOrder",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData= pm.response.json();\r",
+							"console.log(jsonData);\r",
+							"\r",
+							"pm.test(\"Message is correct\", function () {\r",
+							"    pm.expect(jsonData.message).to.eql(\"Orders Deleted Successfully\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/ecom/order/delete-order/{{orderId}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"ecom",
+						"order",
+						"delete-order",
+						"{{orderId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTNmZTE0MzMyZWQ4NjU4NzEzNGQ1MTkiLCJ1c2VyRW1haWwiOiJkZXZ5YW5pLms3N0BnbWFpbC5jb20iLCJ1c2VyTW9iaWxlIjo4NDQ2NjQ2Mjk5LCJ1c2VyUm9sZSI6ImN1c3RvbWVyIiwiaWF0IjoxNzY1ODgxNzY3LCJleHAiOjE3OTc0MzkzNjd9.NMsHTNA4QulGXGT0oF8aDO768PKK8wH3q0Z6Y43ftHI"
+		},
+		{
+			"key": "userId",
+			"value": "693fe14332ed86587134d519"
+		},
+		{
+			"key": "productId",
+			"value": "6940f81d32ed865871368afd"
+		},
+		{
+			"key": "countryname",
+			"value": "India"
+		},
+		{
+			"key": "productOrderId",
+			"value": "6940f81d32ed865871368afd"
+		},
+		{
+			"key": "orderId",
+			"value": "6940f81d32ed865871368b01"
+		},
+		{
+			"key": "productName",
+			"value": "pant"
+		},
+		{
+			"key": "base_url",
+			"value": "https://rahulshettyacademy.com"
+		}
+	]
+}
