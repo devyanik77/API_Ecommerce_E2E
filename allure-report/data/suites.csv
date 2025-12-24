@@ -1,0 +1,7 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"","70","CreateOrder","Ecommerce_E2E","2025-12-24","passed","2025-12-24","","","",""
+"","91","DeleteProduct","Ecommerce_E2E","2025-12-24","passed","2025-12-24","","","",""
+"","209","login","Ecommerce_E2E","2025-12-24","passed","2025-12-24","","","",""
+"","75","ViewOrderDetails","Ecommerce_E2E","2025-12-24","passed","2025-12-24","","","",""
+"","77","CreateProduct","Ecommerce_E2E","2025-12-24","passed","2025-12-24","","","",""
+"","98","DeleteOrder","Ecommerce_E2E","2025-12-24","passed","2025-12-24","","","",""
