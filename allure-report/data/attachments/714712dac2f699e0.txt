@@ -1,2 +1,0 @@
-level: log, messages: [object Object]
-level: log, messages: Saved productId:,694bb5c1c941646b7a6189aa
