@@ -134,7 +134,7 @@
 						{
 							"key": "productImage",
 							"type": "file",
-							"src": "/C:/Users/tgt661/Documents/postman_execution/API_Ecommerce_E2E/data/productImage_1.jpeg"
+							"src": "data/productImage_1.jpeg"
 						},
 						{
 							"key": "productCategory",
